@@ -2,9 +2,8 @@ import streamlit as st
 from gtts import gTTS
 import io, random, datetime
 
-st.set_page_config(page_title="Asmaa Super Academy V8 FINAL", page_icon="🇰🇷", layout="wide")
-st.markdown("<style>.stApp{background:linear-gradient(135deg,#fce4ec,#e8f5e9,#e1bee7)} .stButton>button{background:#ec407a;color:white;border-radius:12px}</style>", unsafe_allow_html=True)
-
+st.set_page_config(page_title="Asmaa Super Academy V8 FINAL", page_icon="🇰🇷", layout="wide")st.markdown("<style>.stApp{background:linear-gradient(135deg,#fce4ec,#e8f5e9,#e1bee7)} .stButton>button{background:#ec407a;color:white;border-radius:12px}</style>", unsafe_allow_html=True)
+st.markdown("<style>.stApp{background:#000000;color:white} .stButton>button{background:#ec407a;color:white;border-radius:12px} h1,h2,h3,p,span{color:white !important}</style>", unsafe_allow_html=True)
 def speak(t):
     try:
         fp=io.BytesIO(); gTTS(text=t, lang='ko').write_to_fp(fp); st.audio(fp.getvalue(), format='audio/mp3')
