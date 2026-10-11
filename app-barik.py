@@ -1,41 +1,148 @@
-<!DOCTYPE html><html dir="rtl" lang="ar"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HalalScan Pro Max</title><style>body{margin:0;font-family:sans-serif;background:#FFF8E1;text-align:center}header{background:linear-gradient(135deg,#1B5E20,#4CAF50);color:#fff;padding:14px;border-radius:0 0 22px 22px}#cam{width:92%;max-width:410px;height:280px;background:#000;border-radius:20px;margin:12px auto;overflow:hidden;position:relative}video,img{width:100%;height:100%;object-fit:cover}button{padding:12px 18px;border:none;border-radius:25px;margin:5px;font-weight:bold;cursor:pointer}.b1{background:#2E7D32;color:#fff}.b2{background:#1565C0;color:#fff}.b3{background:#E65100;color:#fff}#res{display:none;width:92%;max-width:410px;margin:10px auto;padding:16px;border-radius:18px}.halal{background:#E8F5E9;border:3px solid #4CAF50}.haram{background:#FFEBEE;border:3px solid #F44336}.ing{text-align:right;background:#fff;padding:12px;border-radius:12px;margin-top:8px;font-size:13px;line-height:1.7}.mode{width:92%;max-width:410px;margin:8px auto;display:flex;gap:6px}.mode button{flex:1;font-size:12px}</style></head><body>
-<header><h3 style="margin:0">🌍 HalalScan Pro Max</h3><p style="margin:4px;font-size:11px">وضعين: 1- تصوير الطبق 2- تصوير مكونات الكيس</p></header>
-<div class="mode"><button onclick="setMode('dish')" id="m1" style="background:#2E7D32;color:white">🍚 وضع الطبق</button><button onclick="setMode('bag')" id="m2" style="background:#ddd">📦 وضع الكيس</button></div>
-<div id="cam"><video id="v" autoplay playsinline muted></video><img id="p" style="display:none"></div>
-<button class="b1" onclick="openCam()">📸 فتح الكاميرا</button>
-<button class="b2" onclick="document.getElementById('f').click()">📤 رفع صورة</button>
-<button class="b3" onclick="demo()">🎲 تجربة</button>
-<input type="file" id="f" accept="image/*" hidden>
-<div id="res"><h2 id="t"></h2><p id="c"></p><div class="ing" id="d"></div><button onclick="location.reload()" style="background:#333;color:white">🔄 جديد</button></div>
-<script>
-let mode='dish';
-const HARAM=["pork","돼지고기","삼겹살","족발","술","소주","beer","wine","soju","alcohol","gelatin","lard","bacon","ham","e120","e441","e471","e472","خنزير","كحول","خمر","نبيذ","جيلاتين"];
-const DISHES={
-bibimbap:{name:"بيبيمباب 비빔밥",halal:true,ing:"رز، سبانخ، جزر، فجل، بيض، صوص فلفل، زيت سمسم - ✅ لا يوجد خنزير ولا كحول",safe:"حلال 100% - آمن"},
-samgyeopsal:{name:"سامجيوبسال 삼겹살",halal:false,ing:"بطن خنزير مشوي 돼지고기 - ❌ حرام",safe:"حرام - لحم خنزير"},
-soju:{name:"سوجو 소주",halal:false,ing:"كحول 17% 술 - ❌ حرام",safe:"حرام - كحول"},
-ramen:{name:"رامن لحم خنزير 라면",halal:false,ing:"نودلز، مرق خنزير، بيض - ❌ يحتوي خنزير",safe:"حرام"},
-tteokbokki:{name:"توكبوكي 떡볶이",halal:true,ing:"كعك رز، صوص حار، بصل أخضر - ✅ حلال",safe:"حلال 100%"},
-chips:{name:"شيبسي كيس",halal:false,ing:"بطاطس، زيت، نكهة خنزير Pork Flavor، E621، Ethanol - ❌",safe:"حرام - نكهة خنزير + كحول"},
-choco:{name:"شوكولاتة",halal:true,ing:"كاكاو، سكر، حليب، ليسيثين صويا - ✅ حلال",safe:"حلال 100%"}
-};
-function setMode(m){mode=m;document.getElementById('m1').style.background=m=='dish'?'#2E7D32':'#ddd';document.getElementById('m2').style.background=m=='bag'?'#1565C0':'#ddd';document.getElementById('m1').style.color=m=='dish'?'white':'black';document.getElementById('m2').style.color=m=='bag'?'white':'black';}
-async function openCam(){let s=await navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}});document.getElementById('v').style.display='block';document.getElementById('p').style.display='none';document.getElementById('v').srcObject=s;setTimeout(demo,1800);}
-function showResult(key){
-let x=DISHES[key];let box=document.getElementById('res');box.style.display='block';box.className=x.halal?'halal':'haram';
-document.getElementById('t').innerHTML=x.halal?'✅ '+x.name+' - حلال 100%':'❌ '+x.name+' - حرام';
-document.getElementById('c').innerText=x.safe;
-let found=HARAM.filter(h=>x.ing.toLowerCase().includes(h));
-let extra=mode=='bag'?'<br><br><b>🔍 قراءة المكونات من الكيس:</b><br>'+x.ing+'<br><br>':'<br><b>🍽️ تحليل شكل الطبق:</b><br>'+x.ing+'<br><br>';
-if(x.halal){
-document.getElementById('d').innerHTML=extra+'<b style="color:green">✅ النتيجة:</b><br>لم يتم العثور على أي مكون حرام<br>✓ لا خنزير ✓ لا كحول ✓ لا جيلاتين حرام<br><br>🤲 صالح للمسلمين في أي بلد';
-}else{
-document.getElementById('d').innerHTML=extra+'<b style="color:red">🚫 المكونات الحرام:</b><br>'+found.join(', ')+'<br><br><b>📖 الدليل:</b> حرمت عليكم الميتة والدم ولحم الخنزير<br><br><b>💡 البديل:</b> اطلب نسخة حلال بالدجاج أو خضار';
-}
-window.scrollTo(0,999);
-}
-function demo(){
-if(mode=='dish'){let k=['bibimbap','tteokbokki','samgyeopsal','ramen','soju'];showResult(k[Math.floor(Math.random()*k.length)]);}else{let k=['chips','choco','ramen'];showResult(k[Math.floor(Math.random()*k.length)]);}
-}
-document.getElementById('f').addEventListener('change',()=>{demo();});
-</script></body></html>
+import streamlit as st
+from datetime import datetime
+import random
+
+st.set_page_config(page_title="Barik Pro - منظم وقتك", layout="centered", page_icon="🕌")
+
+# --- CSS ---
+st.markdown("""
+<style>
+.card{background:rgba(255,255,255,.06);border:1px solid rgba(212,175,55,.3);border-radius:20px;padding:14px;margin:10px 0}
+.logo{font-size:22px;font-weight:900;color:#d4af37}
+.pill{min-width:70px;background:rgba(255,255,255,.06);border-radius:12px;padding:7px;text-align:center;font-size:10px;display:inline-block;margin:2px}
+.pill.next{background:#d4af37;color:#000;font-weight:800}
+.slot{background:linear-gradient(90deg,rgba(212,175,55,.15),rgba(255,255,255,.03));border-radius:12px;padding:10px;margin:4px 0;border-right:4px solid #d4af37;display:flex;justify-content:space-between}
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown('<div class="card"><div class="logo">بريك | Barik Pro</div><div style="font-size:11px;opacity:.7">بني سويف - الشروق 6:52 | الظهر 12:43 | المغرب 6:34 - منظم أسبوعي شامل</div></div>', unsafe_allow_html=True)
+
+# --- بيانات الصلاة ---
+prayers = [
+    {"n":"الفجر","t":"05:27"},
+    {"n":"الشروق","t":"06:52"},
+    {"n":"الظهر","t":"12:43"},
+    {"n":"العصر","t":"16:04"},
+    {"n":"المغرب","t":"18:34"},
+    {"n":"العشاء","t":"19:50"},
+]
+
+cols = st.columns(6)
+for i,p in enumerate(prayers):
+    is_next = p["n"]=="المغرب"
+    with cols[i]:
+        st.markdown(f"<div class='pill {'next' if is_next else ''}'><div>{p['n']}</div><b>{p['t']}</b></div>", unsafe_allow_html=True)
+
+st.info("🕋 القبلة 132° - بني سويف - القادمة: المغرب 6:34")
+st.write(f"⏰ الآن: {datetime.now().strftime('%I:%M %p')} - بني سويف")
+
+# --- التابات الرئيسية ---
+tab1, tab2, tab3, tab4, tab5 = st.tabs(["📅 الأسبوع", "📿 الأذكار", "📖 القرآن", "📚 فقه وقصص", "📝 يومي"])
+
+# --- 1. الأسبوع ---
+with tab1:
+    if "weekData" not in st.session_state:
+        st.session_state.weekData = {
+            0: [{"time":'08:00',"type":'📚 درس / مذاكرة',"title":'مذاكرة المنحة الكورية',"done":False}],
+            3: [{"time":'05:40',"type":'📿 الأذكار',"title":'أذكار بعد الفجر 5:27',"done":False},
+                {"time":'06:52',"type":'📖 قرآن',"title":'قراءة قرآن بعد الشروق',"done":False},
+                {"time":'09:00',"type":'📚 درس / مذاكرة',"title":'دروس المنحة',"done":False},
+                {"time":'17:00',"type":'🈶 لغة جديدة - كوري',"title":'كوري 20 كلمة',"done":False},
+                {"time":'18:40',"type":'📿 الأذكار',"title":'أذكار المساء قبل المغرب',"done":False}],
+        }
+
+    days = ["السبت","الأحد","الإثنين","الثلاثاء","الأربعاء","الخميس","الجمعة"]
+    day = st.selectbox("اختاري اليوم", range(7), format_func=lambda x: days[x], index=3)
+
+    list_tasks = st.session_state.weekData.get(day, [])
+    done = sum(1 for s in list_tasks if s["done"])
+    total = len(list_tasks)
+    perc = int(done/total*100) if total else 0
+    st.progress(perc, text=f"{perc}% مكتمل - {done} من {total}")
+
+    for i, s in enumerate(list_tasks):
+        col_a, col_b = st.columns([4,1])
+        with col_a:
+            st.markdown(f"<div class='slot'>{s['time']} | {s['type']} - {s['title']}</div>", unsafe_allow_html=True)
+        with col_b:
+            if st.button("✅" if s["done"] else "⭕", key=f"done{day}{i}"):
+                st.session_state.weekData[day][i]["done"] = not s["done"]
+                st.rerun()
+
+    st.divider()
+    st.write("**+ أضيفي وقت جديد**")
+    c1,c2 = st.columns(2)
+    with c1:
+        nType = st.selectbox("النوع", ["📚 درس / مذاكرة","🚿 عناية بالنفس","💪 رياضة","🈶 لغة كورية","🎨 برمجة","🗣️ ثقة بالنفس"])
+    with c2:
+        nTime = st.time_input("الوقت")
+    nTitle = st.text_input("العنوان", placeholder="مثلاً: مذاكرة كوري TOPIK")
+    if st.button("➕ أضيفي للجدول", use_container_width=True):
+        if day not in st.session_state.weekData:
+            st.session_state.weekData[day] = []
+        st.session_state.weekData[day].append({"time":nTime.strftime("%H:%M"),"type":nType,"title":nTitle or nType,"done":False})
+        st.rerun()
+
+# --- 2. الأذكار ---
+with tab2:
+    azkar_filter = st.radio("فلتر", ["الكل","الصباح","المساء","بعد الصلاة","النوم"], horizontal=True)
+
+    allAzkar=[
+        {"cat":'الصباح',"title":'أذكار الصباح (بعد الفجر 5:27)',"text":'أصبحنا وأصبح الملك لله، لا إله إلا الله وحده لا شريك له... (3 مرات)'},
+        {"cat":'الصباح',"title":'آية الكرسي',"text":'الله لا إله إلا هو الحي القيوم...'},
+        {"cat":'المساء',"title":'أذكار المساء (قبل المغرب 6:34)',"text":'أمسينا وأمسى الملك لله...'},
+        {"cat":'المساء',"title":'التسبيح 100',"text":'سبحان الله وبحمده 100 مرة'},
+        {"cat":'بعد الصلاة',"title":'بعد الصلاة',"text":'أستغفر الله 3، اللهم أنت السلام...'},
+        {"cat":'النوم',"title":'أذكار النوم',"text":'باسمك اللهم أموت وأحيا، سورة الملك'},
+        {"cat":'الكل',"title":'دعاء الهم',"text":'لا إله إلا الله العظيم الحليم...'},
+    ]
+    for z in allAzkar:
+        if azkar_filter=="الكل" or z["cat"]==azkar_filter or (azkar_filter=="الكل"):
+            with st.expander(f"{z['title']}"):
+                st.write(z["text"])
+                st.button("قرأته ✅", key=z["title"]+z["cat"])
+
+# --- 3. القرآن ---
+with tab3:
+    surahs=['الفاتحة','البقرة','آل عمران','النساء','المائدة','الأنعام','الأعراف','الأنفال','التوبة','يونس','هود','يوسف','الرعد','إبراهيم','الحجر','النحل','الإسراء','الكهف','مريم','طه','الأنبياء','الحج','المؤمنون','النور','الفرقان','الشعراء','النمل','القصص','العنكبوت','الروم','لقمان','السجدة','الأحزاب','سبأ','فاطر','يس','الصافات','ص','الزمر','غافر','فصلت','الشورى','الزخرف','الدخان','الجاثية','الأحقاف','محمد','الفتح','الحجرات','ق','الذاريات','الطور','النجم','القمر','الرحمن','الواقعة','الحديد','المجادلة','الحشر','الممتحنة','الصف','الجمعة','المنافقون','التغابن','الطلاق','التحريم','الملك','القلم','الحاقة','المعارج','نوح','الجن','المزمل','المدثر','القيامة','الإنسان','المرسلات','النبأ','النازعات','عبس','التكوير','الانفطار','المطففين','الانشقاق','البروج','الطارق','الأعلى','الغاشية','الفجر','البلد','الشمس','الليل','الضحى','الشرح','التين','العلق','القدر','البينة','الزلزلة','العاديات','القارعة','التكاثر','العصر','الهمزة','الفيل','قريش','الماعون','الكوثر','الكافرون','النصر','المسد','الإخلاص','الفلق','الناس']
+
+    qSearch = st.text_input("ابحثي عن سورة... مثلاً البقرة / يس / الملك")
+    filtered = [s for s in surahs if qSearch in s] if qSearch else surahs[:15]
+
+    for idx, s in enumerate(filtered):
+        col1,col2 = st.columns([3,1])
+        col1.write(f"**{surahs.index(s)+1}. {s}** - الجزء { (surahs.index(s)//4)+1 }")
+        if col2.button("اقرأي", key=f"q{idx}"):
+            st.link_button(f"افتحي سورة {s} في quran.com", f"https://quran.com/ar/{surahs.index(s)+1}")
+
+    st.divider()
+    st.write("📖 **مصحف القراءة**")
+    st.info("اختاري سورة للقراءة... بسم الله الرحمن الرحيم - لو عايزة المصحف الكامل افتحي quran.com")
+    st.link_button("افتحي المصحف الكامل", "https://quran.com/ar")
+
+# --- 4. فقه ---
+with tab4:
+    fiqh = st.selectbox("اختاري", ["فقه الصلاة","فقه الوضوء","قصص الأنبياء","تعلم مهارة"])
+    if fiqh=="فقه الصلاة":
+        st.write("**أركان الصلاة:** النية، القيام، الفاتحة، الركوع، السجود... الظهر 12:43 - 4 فرض، 4 سنة قبل")
+    elif fiqh=="فقه الوضوء":
+        st.write("**فرائض:** غسل الوجه، اليدين للمرفقين، مسح الرأس، غسل الرجلين - **سنن:** البسملة، السواك...")
+    elif fiqh=="قصص الأنبياء":
+        st.write("**يوسف:** صبر على البلاء فصار عزيز مصر - **مريم:** طهارة وعفة - **موسى:** مواجهة الظلم")
+    else:
+        st.write("1. برمجة تطبيقات: MIT App Inventor\n2. رسم: 10 دقايق يومياً\n3. ثقة بالنفس: اتكلمي قدام المراية 2 دقيقة\n4. كوري: Duolingo")
+
+# --- 5. يومي ---
+with tab5:
+    st.write(f"📝 **مراجعة يوم {datetime.now().strftime('%A')}**")
+    if "notes" not in st.session_state:
+        st.session_state.notes = []
+
+    dailyNote = st.text_area("اكتبي هنا: النهارده عملت ايه؟ حسيتي بإيه؟", height=150)
+    if st.button("💾 احفظي نوتة اليوم"):
+        if dailyNote:
+            st.session_state.notes.append({"date":datetime.now().strftime("%Y-%m-%d %H:%M"), "text":dailyNote})
+            st.success("اتحفظت!")
+
+    for n in reversed(st.session_state.notes[-3:]):
+        st.markdown(f"<div style='background:rgba(255,255,255,.05);border:1px dashed #d4af37;border-radius:12px;padding:10px;margin:8px 0'><div style='font-size:10px;opacity:.7'>{n['date']}</div><div>{n['text']}</div></div>", unsafe_allow_html=True)
