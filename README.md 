@@ -1,16 +1,10 @@
-# Asmaa's Platform - 3 Apps for GKS
+# Asmaa Platform GKS 2027
 
-### 1. Barik Pro - Islamic Time Manager (Beni Suef)
-Prayer times, Qibla 132°, Quran, Azkar, weekly planner
-File: app-barik.py
+My portfolio for GKS Scholarship - 3 AI Apps to bridge Egypt & Korea
 
-### 2. HalalScan Pro Max
-AI to check Halal food in Korea - Dish & Ingredients mode
-File: halal app
+## 🚀 Live Apps:
+1. Asmaa Academy Black 1000 - Korean Learning: https://asmaa-black-1000.streamlit.app/
+2. HalalScan - Halal Checker for Muslims in Korea: https://halalpy-nyzqe45c5jk6dyf83np3yk.streamlit.app/
+3. Barik Pro - Price Comparison: [https://asmaa-black-dvzpyg4njpxbv7mn2gm3kn.streamlit.app/]
 
-### 3. Asmaa Academy 1000 Black Ultimate
-Korean speaking AI app - gTTS Korean
-File: app.py
-
-Tech: Python, Streamlit, gTTS, Pillow
-Built by Asmaa from Beni Suef - GKS Applicant
+Built by Asmaa | Beni Suef, Egypt | For GKS-U 2026
